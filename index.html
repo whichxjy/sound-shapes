@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111719">
+  <meta name="description" content="See and hear musical intervals through Lissajous curves.">
+  <title>Sound Shapes — An interval study</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="gallery.css">
+</head>
+<body>
+  <div class="shell">
+    <header class="header">
+      <a class="brand" href="#top"><span class="brand-mark" aria-hidden="true">◉</span> sound shapes</a>
+      <span class="header-subtitle">An interactive interval study</span>
+      <a class="header-about" href="#notes">About this study ↗</a>
+    </header>
+    <main id="top">
+      <section class="intro">
+        <p class="eyebrow">01 / EXPLORE</p>
+        <h1>What does an interval<br><em>look like?</em></h1>
+        <p>Twelve intervals, twelve drawings. Browse them side by side, then select one to see and hear it up close.</p>
+      </section>
+      <section class="overview" id="intervals" aria-labelledby="overview-title">
+        <div class="overview-bar"><div><span class="live-dot"></span><span>01 / INTERVAL ATLAS</span></div><span>PREVIEWS AT 0°</span></div>
+        <div class="overview-heading"><div><h2 id="overview-title">Choose an interval</h2><p>Arranged by pitch. Shape complexity does not measure consonance.</p></div><p id="selected-summary" aria-live="polite">SELECTED / C + G</p></div>
+        <div class="interval-grid" id="interval-grid"></div>
+      </section>
+      <section class="instrument" id="detail" aria-label="Selected interval visualizer">
+        <div class="instrument-bar"><span>02 / SELECTED STUDY</span><a href="#intervals">VIEW ALL INTERVALS ↑</a></div>
+        <div class="instrument-content">
+          <div class="visual">
+            <div class="visual-head"><div><small>NOW VIEWING</small><h2 id="interval-title" tabindex="-1">C + G</h2></div><div class="ratio"><small>FREQUENCY RATIO</small><strong id="ratio">3 : 2</strong></div></div>
+            <div class="canvas-wrap"><canvas id="curve" aria-label="Lissajous curve for the selected interval"></canvas><span class="axis axis-y">UPPER NOTE <b id="upper-axis">G</b></span><span class="axis axis-x">BASE NOTE <b>C</b></span></div>
+            <div class="visual-foot"><span>━ &nbsp; TWO OSCILLATIONS / ONE PATH</span><span id="frequencies">261.6 Hz + 392.4 Hz</span></div>
+          </div>
+          <aside class="controls" aria-label="Controls">
+            <div class="controls-bar"><span>CONTROLS</span><span>01 — 02</span></div>
+            <div class="control"><div class="control-head"><label for="phase">01 <span>PHASE SHIFT</span></label><output id="phase-value" for="phase">0°</output></div><input id="phase" type="range" min="0" max="360" value="0"><div class="range-labels"><span>0°</span><span>360°</span></div><p>Changes the drawing. The interval stays the same.</p></div>
+            <div class="control"><div class="control-head"><span>02 <span>LISTEN</span></span><span class="headphones">HEADPHONES RECOMMENDED</span></div><button id="play" type="button" aria-pressed="false"><span id="play-symbol">▶</span><span id="play-text">Play both notes</span><span class="arrow">↗</span></button><p>Keep volume low when you begin.</p></div>
+            <p class="control-note">◎ &nbsp; Try changing phase while listening. The line moves; the pitches do not.</p>
+          </aside>
+        </div>
+      </section>
+      <section class="notes" id="notes"><div class="notes-bar"><span>FIELD NOTES</span><span>03 / UNDERSTAND</span></div><div class="notes-content"><h2>A useful picture.<br><em>Not a verdict.</em></h2><div><p>A Lissajous curve maps one oscillation to the horizontal axis and another to the vertical axis. Simple frequency ratios make paths that repeat quickly.</p><p>The curve is not the path sound takes through air. Its shape changes with phase, while the pitch interval remains the same. Consonance also depends on timbre, register, and listening experience.</p><a href="https://mathworld.wolfram.com/LissajousCurve.html" target="_blank" rel="noopener noreferrer">Read about Lissajous curves ↗</a></div></div></section>
+    </main>
+    <footer><span>SOUND SHAPES / AN OPEN EXPERIMENT</span><span>MADE FOR CURIOUS EARS</span></footer>
+  </div>
+  <script type="module" src="main.js"></script>
+</body>
+</html>
