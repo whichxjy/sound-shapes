@@ -1,6 +1,6 @@
 # Sound Shapes
 
-A small, dependency-free website for seeing and hearing musical intervals and three-note chords. Intervals pair a large Lissajous curve with a twelve-interval collection. Chords offer a rotatable three-dimensional signal trajectory, simultaneous three-note playback, major/minor comparison, and expandable pairwise projections. Pure and Soft timbres offer sine tones or gentle harmonics with a slow onset and quieter sustain. Curves always represent fundamental sine signals. Visual phase controls change the drawings without changing the pitches.
+A small, dependency-free website for seeing and hearing musical intervals and three-note chords. Intervals pair a large Lissajous curve with a twelve-interval collection. Chords offer a rotatable three-dimensional signal trajectory, simultaneous three-note playback, major, minor, diminished, and cluster comparison, and expandable pairwise projections. Pure and Soft timbres offer sine tones or gentle harmonics with a slow onset and quieter sustain. Curves always represent fundamental sine signals. Visual phase controls change the drawings without changing the pitches.
 
 The project brief, scientific boundaries, and implementation notes live in [docs](docs/README.md). They provide context for future development.
 
@@ -16,7 +16,7 @@ Then open `http://localhost:8000`.
 
 ## What the visual means
 
-In Intervals, the base note controls the horizontal axis and the upper note controls the vertical axis. In Chords, the root, third, and fifth control X, Y, and Z. The reference cube is shown by default and can be turned off in “Adjust the drawing.” Drag or use arrow keys to rotate; Reset view or Home restores the camera.
+In Intervals, the base note controls the horizontal axis and the upper note controls the vertical axis. In Chords, the low, middle, and high notes control X, Y, and Z. The reference cube is shown by default and can be turned off in “Adjust the drawing.” Drag or use arrow keys to rotate; Reset view or Home restores the camera.
 
 These curves represent frequency relationships, not the physical path of sound or a measure of harmony. Changing visual phase or camera angle changes the drawing without changing the pitches. The included ratios are examples of just intonation; most modern pianos use equal temperament. The interval collection is arranged by pitch, not by consonance.
 

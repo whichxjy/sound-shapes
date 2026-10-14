@@ -25,7 +25,7 @@
       <section class="instrument" id="detail" aria-label="Selected interval visualizer">
         <p class="visually-hidden" id="selected-summary" aria-live="polite">Selected: C + G, Perfect fifth</p>
         <div class="study-heading"><button id="previous" type="button" aria-label="Previous interval">←</button><div><h2 id="interval-title">C + G</h2><p><span id="interval-name">Perfect fifth</span><span aria-hidden="true"> · </span><span id="ratio">3 : 2</span></p></div><button id="next" type="button" aria-label="Next interval">→</button></div>
-        <div class="chord-switch" id="chord-switch" role="group" aria-label="Chord quality" hidden><button type="button" data-chord="0" aria-pressed="true">Major</button><button type="button" data-chord="1" aria-pressed="false">Minor</button></div>
+        <div class="chord-switch" id="chord-switch" role="group" aria-label="Chord example" hidden><button type="button" data-chord="0" aria-pressed="true">Major</button><button type="button" data-chord="1" aria-pressed="false">Minor</button><button type="button" data-chord="2" aria-pressed="false">Diminished</button><button type="button" data-chord="3" aria-pressed="false">Cluster</button></div>
         <div class="canvas-wrap"><svg id="interval-curve" role="img" aria-label="Lissajous curve for the selected interval"><path class="curve-line"/><circle r="10" fill="rgba(213, 92, 52, .13)"/><circle r="3" fill="#bf4928"/></svg><canvas id="curve" aria-label="Three-dimensional chord trajectory" hidden></canvas></div>
         <div id="chord-view-controls" hidden><p class="view-hint">Drag to rotate · arrow keys also work</p><button type="button" id="reset-view">Reset view</button></div>
         <div class="playback-controls">

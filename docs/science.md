@@ -46,7 +46,7 @@ The curve is also not a picture of a sound wave moving through a room, nor a phy
 
 ## Three-note model
 
-Chords use `r(t) = (sin(2π a t), sin(2π b t + φ₂), sin(2π c t + φ₃))`. C major uses 4:5:6; C minor uses 10:12:15. Each audible frequency is `C4 × coefficient / root coefficient`. All three tones play together. The two visual phase controls do not change their audio phases.
+Chords use `r(t) = (sin(2π a t), sin(2π b t + φ₂), sin(2π c t + φ₃))`. C major uses 4:5:6; C minor uses 10:12:15; septimal C diminished uses 5:6:7; C cluster uses 15:16:17. The latter two provide listening contrasts; note labels approximate these rational tunings rather than equal-tempered pitches. Each audible frequency is `C4 × coefficient / root coefficient`. All three tones play together. The two visual phase controls do not change their audio phases.
 
 The 3D trajectory is shown through an orthographic camera. Camera rotation changes its outline without changing the underlying signals. A reference cube bounds each signal from −1 to +1; it is a coordinate guide, not a room or physical enclosure. The expandable XY, XZ, and YZ plots use the same signal phases and mathematical time. Their reduced ratios are derived from the chord coefficients.
 

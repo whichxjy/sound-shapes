@@ -2,14 +2,16 @@
 
 ## Current experience
 
-The Intervals / Chords switch preserves the interval collection and opens a three-note study. The chord mode uses one rotatable 3D trajectory as its main visual and plays all three tones together. Major / Minor buttons change the middle pitch during playback. Previous / next controls select the same two chords.
+The Intervals / Chords switch preserves the interval collection and opens a three-note study. The chord mode uses one rotatable 3D trajectory as its main visual and plays all three tones together. Major / Minor / Diminished / Cluster buttons retune the three pitches during playback. Previous / next controls cycle through the same four examples.
 
 | Chord | Notes | Relative frequencies | Pairwise ratios |
 | --- | --- | --- | --- |
 | C major | C4, E4, G4 | 4:5:6 | C–E 5:4; C–G 3:2; E–G 6:5 |
 | C minor | C4, E♭4, G4 | 10:12:15 | C–E♭ 6:5; C–G 3:2; E♭–G 5:4 |
+| C diminished | C4, E♭4, G♭4 | 5:6:7 | C–E♭ 6:5; C–G♭ 7:5; E♭–G♭ 7:6 |
+| C cluster | C4, D♭4, D4 | 15:16:17 | C–D♭ 16:15; C–D 17:15; D♭–D 17:16 |
 
-Both use C4 = 261.625565 Hz and illustrative just intonation. These tuning choices differ from equal temperament.
+All use C4 = 261.625565 Hz and illustrative just intonation. These tuning choices differ from equal temperament. Diminished is a septimal diminished triad: G♭ is 7:5 above C (about 583 cents). Cluster uses adjacent rational frequencies; D is 17:15 above C (about 217 cents). Note names are approximate. These examples offer listening contrasts, not a ranking of consonance.
 
 ## Mathematical view
 
@@ -27,14 +29,14 @@ The outline depends on camera angle and visual phase. Neither its regularity nor
 
 `chords.js` contains chord data, signal points, orthographic rotation, ratio reduction, and canvas rendering. The existing static stack needs no 3D runtime dependency. Audio starts the oscillators at one shared time. Pure per-oscillator gain peaks at 0.13 divided by the number of notes. Soft peaks at 0.095 divided by the number of notes and fades to a quieter sustain; changing study mode stops playback and cancels any pending start.
 
-Rendering is limited to the visible main study, and closed projection details do not animate. Tracing uses a slowed mathematical clock, not an attempt to animate the audible frequency in real time. Its root-axis speed is consistent between major and minor examples.
+Rendering is limited to the visible main study, and closed projection details do not animate. Tracing uses a slowed mathematical clock, not an attempt to animate the audible frequency in real time. Its root-axis speed is consistent across all four examples.
 
 ## Manual checks
 
 1. Switch between Intervals and Chords; verify labels, controls, collection visibility, and stopped playback.
 2. Play C major, switch to C minor during playback, and verify that only the middle frequency changes.
 3. Drag the trajectory, rotate with the keyboard, and reset the camera. Toggle the reference cube off and on; verify it rotates with the trajectory and stays within the canvas.
-4. Open the projections and verify major ratios 5:4, 3:2, 6:5 and minor ratios 6:5, 3:2, 5:4.
+4. Select all four examples, including during playback; verify notes, frequencies, selected buttons, and projection ratios against the table. Check previous/next wrap through all four.
 5. Change both visual phases; check that the corresponding projections change while pitches remain fixed.
 6. Pause tracing, test reduced motion, and confirm phone layout has no horizontal overflow.
 

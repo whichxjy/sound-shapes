@@ -12,7 +12,8 @@
 .mode-switch, .chord-switch { display: flex; justify-content: center; gap: 6px; margin-top: 22px; }
 .mode-switch button, .chord-switch button { border: 0; background: transparent; color: var(--muted); border-radius: 18px; padding: 8px 18px; font-size: 12px; }
 .mode-switch button[aria-pressed="true"], .chord-switch button[aria-pressed="true"] { background: #e8e5dd; color: #292923; }
-.chord-switch { margin: 18px 0 0; }
+.chord-switch { margin: 18px 0 0; gap: 4px; flex-wrap: wrap; }
+.chord-switch button { padding: 8px 12px; }
 .view-hint { font-size: 10px; color: var(--muted); margin: 0; }
 #chord-view-controls { margin: -6px 0 18px; }
 #reset-view { border: 0; background: none; color: var(--muted); font-size: 11px; padding: 8px; text-decoration: underline; text-underline-offset: 3px; }
@@ -92,6 +93,8 @@ input[type="range"] { width: 100%; display: block; margin: 18px 0; accent-color:
 footer { display: flex; justify-content: space-between; padding: 24px 0 32px; border-top: 1px solid var(--rule); color: var(--muted); font-size: 11px; }
 footer a { text-decoration: none; }
 @media (max-width: 680px) {
+  .chord-switch { gap: 2px; }
+  .chord-switch button { padding: 8px 9px; font-size: 11px; }
   .shell { width: calc(100% - 36px); }
   .header { height: 64px; }
   .intro { padding: 28px 0 32px; }

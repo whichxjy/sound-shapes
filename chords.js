@@ -1,6 +1,8 @@
 export const chords = [
   { name: "C major", notes: ["C", "E", "G"], ratios: [4, 5, 6] },
   { name: "C minor", notes: ["C", "E♭", "G"], ratios: [10, 12, 15] },
+  { name: "C diminished", notes: ["C", "E♭", "G♭"], ratios: [5, 6, 7] },
+  { name: "C cluster", notes: ["C", "D♭", "D"], ratios: [15, 16, 17] },
 ];
 
 export function chordPoint(chord, position, phases) {
