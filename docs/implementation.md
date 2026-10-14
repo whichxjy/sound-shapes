@@ -10,6 +10,8 @@ The selected interval is one entry from the interval table. The overview cards a
 
 This is one page with one small set of shared state: selected interval, phase, animation progress, and playback. A framework would add installation and build steps without simplifying the current implementation. Consider a typed component stack if future work adds routing, saved experiments, several synchronized visualizations, imported audio, or substantial state sharing. Keep the mathematical model separate from UI code if that transition happens.
 
+The proposed three-note expansion starts with three pairwise plots and the existing static stack. Its design and acceptance criteria are in [the triad proposal](triads.md).
+
 ## Accessibility and performance
 
 - Use real buttons for cards and playback, a labeled native range input for phase, and visible keyboard focus.
