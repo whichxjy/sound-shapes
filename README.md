@@ -1,25 +1,30 @@
 # Sound Shapes
 
-A small, dependency-free website for seeing and hearing musical intervals and three-note chords. Intervals pair a large Lissajous curve with a twelve-interval collection. Chords offer a rotatable three-dimensional signal trajectory, simultaneous three-note playback, major, minor, diminished, and cluster comparison, and expandable pairwise projections. Pure and Soft timbres offer sine tones or gentle harmonics with a slow onset and quieter sustain. Curves always represent fundamental sine signals. Visual phase controls change the drawings without changing the pitches.
+**See what you hear.** An interactive listening room for exploring musical intervals and three-note chords through sound and shape.
 
-The project brief, scientific boundaries, and implementation notes live in [docs](docs/README.md). They provide context for future development.
+![Twelve musical intervals, from a minor second to an octave, shown as blue Lissajous curves.](docs/images/intervals.svg)
+
+## Listen and explore
+
+- **Intervals:** compare twelve pairs of notes and their two-dimensional curves.
+- **Chords:** hear Major, Minor, Diminished, and Cluster examples. Rotate the 3D shape and unfold its three pairwise projections.
+- **Timbre:** choose Soft for gentle harmonics or Pure for sine tones.
+- **Drawing:** adjust visual phase or pause tracing without changing the pitches.
+
+![C major in three dimensions with a reference cube and three pairwise projections.](docs/images/chords.svg)
 
 ## Run locally
 
-Serve this directory with any static HTTP server, for example:
+No dependencies or build step. From the repository directory:
 
 ```sh
 python3 -m http.server 8000
 ```
 
-Then open `http://localhost:8000`.
+Open [localhost:8000](http://localhost:8000) and press Play. Use an HTTP server rather than opening the HTML file directly.
 
-## What the visual means
+## About the shapes
 
-In Intervals, the base note controls the horizontal axis and the upper note controls the vertical axis. In Chords, the low, middle, and high notes control X, Y, and Z. The reference cube is shown by default and can be turned off in “Adjust the drawing.” Drag or use arrow keys to rotate; Reset view or Home restores the camera.
+Each axis follows one note’s fundamental sine signal. Frequency ratios create repeating trajectories; a third note adds depth. These are mathematical pictures, not sound’s path through air. **Visual complexity does not measure consonance.** The examples use rational tunings that can differ from an equal-tempered piano.
 
-These curves represent frequency relationships, not the physical path of sound or a measure of harmony. Changing visual phase or camera angle changes the drawing without changing the pitches. The included ratios are examples of just intonation; most modern pianos use equal temperament. The interval collection is arranged by pitch, not by consonance.
-
-All code, layout, and visual assets in this project were made for this project. No third-party runtime packages or media assets are included.
-
-Before publishing, choose a license for the repository. Public visibility alone does not grant permission to reuse the code.
+Built with HTML, CSS, JavaScript, Web Audio, SVG, and Canvas. See the [project documentation](docs/README.md) for the scientific model, tuning choices, and implementation details.
