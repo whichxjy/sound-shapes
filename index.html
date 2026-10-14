@@ -30,9 +30,9 @@
         <div id="chord-view-controls" hidden><p class="view-hint">Drag to rotate · arrow keys also work</p><button type="button" id="reset-view">Reset view</button></div>
         <div class="playback-controls">
           <button id="play" type="button" aria-pressed="false"><span id="play-symbol" aria-hidden="true">▶</span><span id="play-text">Play both notes</span></button>
-          <div class="tone-switch" role="group" aria-label="Sound timbre"><button type="button" data-tone="pure" aria-pressed="true">Pure</button><button type="button" data-tone="soft" aria-pressed="false">Soft</button></div>
+          <div class="tone-switch" role="group" aria-label="Sound timbre"><button type="button" data-tone="soft" aria-pressed="true">Soft</button><button type="button" data-tone="pure" aria-pressed="false">Pure</button></div>
         </div>
-        <p class="listening-note"><span id="tone-description">Pure sine tones.</span></p>
+        <p class="listening-note"><span id="tone-description">Gentle harmonics, softer onset.</span></p>
         <details class="drawing-options"><summary>Adjust the drawing</summary><div class="phase-control"><div class="phase-label"><label for="phase">Visual phase</label><output id="phase-value" for="phase">0°</output></div><input id="phase" type="range" min="0" max="360" value="0"><div class="phase-foot"><span>Changes the shape, not the pitches.</span><div class="phase-presets" role="group" aria-label="Phase presets"><button type="button" data-phase="0" aria-pressed="true">0°</button><button type="button" data-phase="90" aria-pressed="false">90°</button><button type="button" data-phase="180" aria-pressed="false">180°</button></div></div><div class="visual-foot"><span id="frequencies">261.6 Hz + 392.4 Hz</span><button id="motion" type="button" aria-pressed="true">Pause tracing</button></div></div></details>
       </section>
       <section id="chord-extras" class="chord-extras" hidden>

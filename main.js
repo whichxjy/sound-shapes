@@ -31,7 +31,7 @@ let frame = 0;
 let audioContext;
 let oscillators = [];
 let masterGain;
-let tone = "pure";
+let tone = "soft";
 let softWave;
 let playing = false;
 let audioStarting = false;
