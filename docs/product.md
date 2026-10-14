@@ -18,7 +18,7 @@ The visitor should leave with three ideas:
 
 ## Current experience
 
-The Chords mode replaces the interval collection with one rotatable three-signal trajectory. Major / Minor compares C–E–G and C–E♭–G during playback, changing only the middle pitch. Switching study modes stops playback. A faint reference cube is shown by default and can be toggled in “Adjust the drawing.” Two visual phase controls and three pairwise projections stay inside expandable sections. Tuning and model details are in [the chord study](triads.md).
+The Chords mode replaces the interval collection with one rotatable three-signal trajectory. Major / Minor compares C–E–G and C–E♭–G during playback, changing only the middle pitch. Switching study modes stops playback. A faint reference cube is shown by default and can be toggled in “Adjust the drawing.” Major / Minor sits below the study heading, while Pure / Soft sits below the centered playback button. Two visual phase controls and three pairwise projections stay inside expandable sections with aligned, left-justified summaries. Tuning and model details are in [the chord study](triads.md).
 
 - Show all twelve chosen intervals above C4 in ascending pitch order. This order is musical position, not a consonance ranking.
 - Use one base pitch, C4 at approximately 261.63 Hz, and sample just-intonation ratios for the upper pitches.

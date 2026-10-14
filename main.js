@@ -86,7 +86,7 @@ function setMode(nextMode) {
   mode = nextMode;
   document.body.classList.toggle("chord-mode", mode === "chords");
   document.querySelectorAll("[data-mode]").forEach(button => button.setAttribute("aria-pressed", String(button.dataset.mode === mode)));
-  document.querySelectorAll("#chord-view-controls, #chord-switch, #chord-caption, #chord-extras").forEach(element => { element.hidden = mode !== "chords"; });
+  document.querySelectorAll("#chord-view-controls, #chord-switch, #chord-extras").forEach(element => { element.hidden = mode !== "chords"; });
   document.querySelector(".drawing-options").hidden = mode === "chords";
   document.querySelector(".overview").hidden = mode === "chords";
   document.querySelector("#detail").setAttribute("aria-label", mode === "chords" ? "Selected chord visualizer" : "Selected interval visualizer");
@@ -409,7 +409,7 @@ document.querySelectorAll("[data-tone]").forEach(button => button.addEventListen
   tone = button.dataset.tone;
   document.querySelectorAll("[data-tone]").forEach(option => option.setAttribute("aria-pressed", String(option.dataset.tone === tone)));
   document.querySelector("#tone-description").textContent = tone === "pure"
-    ? "Pure sine tones match the curve’s signal model."
-    : "Gentle harmonics, slow onset, quieter sustain. Curves show fundamental frequencies.";
+    ? "Pure sine tones."
+    : "Gentle harmonics, softer onset.";
   if (playing) applyTimbre();
 }));
