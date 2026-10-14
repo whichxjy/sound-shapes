@@ -15,7 +15,7 @@
 .chord-switch { margin: 18px 0 0; }
 .view-hint { font-size: 10px; color: var(--muted); margin: 0; }
 #chord-view-controls { margin: -6px 0 18px; }
-#reset-view, #chord-motion { border: 0; background: none; color: var(--muted); font-size: 11px; padding: 8px; text-decoration: underline; text-underline-offset: 3px; }
+#reset-view { border: 0; background: none; color: var(--muted); font-size: 11px; padding: 8px; text-decoration: underline; text-underline-offset: 3px; }
 body.chord-mode #curve { touch-action: none; cursor: grab; }
 body.chord-mode #curve:active { cursor: grabbing; }
 body.chord-mode .canvas-wrap { height: 320px; }
@@ -26,7 +26,10 @@ body.chord-mode .canvas-wrap { height: 320px; }
 .chord-phase-controls { max-width: 360px; margin: 22px auto; text-align: left; }
 .chord-phase-controls label { font-size: 12px; display: flex; justify-content: space-between; }
 .chord-phase-controls .frame-option { justify-content: flex-start; align-items: center; gap: 8px; margin-bottom: 24px; color: var(--muted); }
-.frame-option input { accent-color: var(--blue); }
+.frame-option input { accent-color: var(--blue); margin: 0; width: 13px; height: 13px; flex-shrink: 0; }
+.chord-phase-controls output { color: var(--blue); font-variant-numeric: tabular-nums; }
+.chord-phase-controls > p { margin: 20px 0 0; }
+.chord-phase-controls .visual-foot { margin-top: 12px; }
 .chord-phase-controls p, .pair-description { font-size: 11px; line-height: 1.7; color: var(--muted); }
 .pair-description { margin: 22px auto 0; max-width: 320px; }
 .pair-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
@@ -78,7 +81,7 @@ input[type="range"] { width: 100%; display: block; margin: 18px 0; accent-color:
 .phase-presets { display: flex; gap: 4px; }
 .phase-presets button { padding: 6px; border: 1px solid transparent; border-radius: 3px; background: transparent; color: var(--muted); font-size: 10px; }
 .phase-presets button[aria-pressed="true"] { border-color: var(--blue); color: var(--blue); }
-.visual-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 18px; font-size: 10px; color: var(--muted); }
+.visual-foot { display: flex; gap: 12px; flex-wrap: wrap; justify-content: space-between; align-items: center; margin-top: 18px; font-size: 10px; color: var(--muted); }
 .visual-foot button { border: 0; padding: 8px 0; background: none; color: var(--muted); font-size: 11px; text-decoration: underline; text-underline-offset: 4px; }
 .notes { max-width: 560px; margin: 0 auto; padding: 56px 0 64px; }
 .notes h2 { font-size: 18px; font-weight: 400; letter-spacing: -.02em; margin: 0 0 20px; }
