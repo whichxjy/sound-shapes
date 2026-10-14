@@ -8,7 +8,7 @@ The site is in English. It is intended to be public on GitHub and usable as a st
 
 ## Audience and primary journey
 
-The intended visitor is curious about music or the video-style diagrams, but may not know music theory. The first screen introduces the question and immediately presents an overview of interval cards. Each card shows a curve, note pair, interval name, and frequency ratio. Selecting a card marks it as active and reveals a larger study area where the visitor can adjust the curve's relative phase and play or stop the two notes.
+The intended visitor is curious about music or geometric diagrams, but may not know music theory. The first screen presents a centered curve, note pair, interval name, ratio, and playback. Previous and next controls invite exploration. Phase controls and tracing pause live in an expandable “Adjust the drawing” area. A compact collection below shows all twelve intervals side by side. Selecting a specimen updates the study without scrolling; a separate link returns to it.
 
 The visitor should leave with three ideas:
 
@@ -27,11 +27,12 @@ The visitor should leave with three ideas:
 
 ## Visual direction
 
-The page should feel like a restrained instrument or printed field guide: dark charcoal, muted green, fine rules, deliberate type, and generous spacing. The curve is the primary graphic. Avoid stock imagery, decorative 3D, large gradients, and generic dashboard effects. The overview should feel like a set of comparable specimens, not a ranking chart.
+The page should feel quiet and minimal: warm paper, cobalt curves, one type family, and generous whitespace. One centered drawing is the focal point. Keep headings small, remove decorative numbering and axes, and show secondary controls and detailed explanations only on expansion. The compact collection shows comparable drawings at a baseline phase of 0°, in ascending pitch order, not a ranking. Avoid dashboard panels, decorative status indicators, stock imagery, and gradients.
 
 ## Acceptance criteria
 
-- On desktop, multiple interval cards are visible without opening a selector. On a narrow phone, cards remain legible and the page has no horizontal overflow.
+- The initial desktop view offers immediate playback; visual phase adjustment is available through “Adjust the drawing.” All twelve interval drawings are available in a collection without opening a selector. On a narrow phone, cards remain legible and the page has no horizontal overflow.
+- Phase presets provide 0°, 90°, and 180° starting points. Tracing can be paused independently of audio, and starts paused when reduced motion is requested.
 - Each card is keyboard reachable; the active card is visibly and programmatically identified.
 - Selecting a card updates all labels, frequencies, and the large curve. If audio is already playing, its upper oscillator moves to the new frequency.
 - Phase adjustment redraws the large curve while the numeric frequencies stay the same.

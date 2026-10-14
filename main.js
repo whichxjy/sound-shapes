@@ -16,11 +16,12 @@ const intervals = [
 const baseFrequency = 261.625565;
 const canvas = document.querySelector("#curve");
 const grid = document.querySelector("#interval-grid");
-const detail = document.querySelector("#detail");
 const phaseInput = document.querySelector("#phase");
 const playButton = document.querySelector("#play");
 const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
 const cards = [];
+const curvePaths = new WeakMap();
+const motionButton = document.querySelector("#motion");
 
 let selectedIndex = 6;
 let phase = 0;
@@ -29,6 +30,11 @@ let audioContext;
 let oscillators = [];
 let masterGain;
 let playing = false;
+let audioStarting = false;
+let audioRequest = 0;
+let tracing = !reducedMotion.matches;
+let detailVisible = true;
+let lastTime;
 
 function shortNote(note) {
   return note.slice(0, -1);
@@ -56,29 +62,8 @@ function drawCurve(target, interval, relativePhase, progress, preview = false) {
   if (!width || !height) return;
 
   drawing.clearRect(0, 0, width, height);
-  if (!preview) {
-    drawing.strokeStyle = "rgba(174, 204, 179, .055)";
-    drawing.lineWidth = 1;
-    for (let index = 1; index < 10; index++) {
-      const x = width * index / 10;
-      const y = height * index / 10;
-      drawing.beginPath();
-      drawing.moveTo(x, 0);
-      drawing.lineTo(x, height);
-      drawing.moveTo(0, y);
-      drawing.lineTo(width, y);
-      drawing.stroke();
-    }
-    drawing.strokeStyle = "rgba(174, 204, 179, .14)";
-    drawing.beginPath();
-    drawing.moveTo(width / 2, 0);
-    drawing.lineTo(width / 2, height);
-    drawing.moveTo(0, height / 2);
-    drawing.lineTo(width, height / 2);
-    drawing.stroke();
-  }
 
-  const radiusX = Math.min(width * .38, height * .42);
+  const radiusX = Math.min(width * .38, height * .62);
   const radiusY = height * .37;
   const steps = preview ? Math.max(800, interval.upper * 32) : Math.max(1200, interval.upper * 96);
   const point = position => {
@@ -89,28 +74,29 @@ function drawCurve(target, interval, relativePhase, progress, preview = false) {
     ];
   };
 
-  drawing.beginPath();
-  for (let index = 0; index <= steps; index++) {
-    const [x, y] = point(index / steps);
-    if (index === 0) drawing.moveTo(x, y);
-    else drawing.lineTo(x, y);
+  const pathKey = `${width}/${height}/${interval.upper}/${interval.lower}/${relativePhase}`;
+  let cached = curvePaths.get(target);
+  if (cached?.key !== pathKey) {
+    const path = new Path2D();
+    for (let index = 0; index <= steps; index++) {
+      const [pointX, pointY] = point(index / steps);
+      if (index === 0) path.moveTo(pointX, pointY);
+      else path.lineTo(pointX, pointY);
+    }
+    cached = { key: pathKey, path };
+    curvePaths.set(target, cached);
   }
-  drawing.strokeStyle = preview ? "#a8cbb1" : "#b9dbc1";
-  drawing.lineWidth = preview ? 1.25 : 1.7;
-  if (!preview) {
-    drawing.shadowColor = "rgba(166, 225, 184, .4)";
-    drawing.shadowBlur = 12;
-  }
-  drawing.stroke();
-  drawing.shadowBlur = 0;
+  drawing.strokeStyle = preview ? "#5363ac" : "#263fba";
+  drawing.lineWidth = preview ? 1 : 1.8;
+  drawing.stroke(cached.path);
 
   if (progress === undefined) return;
   const [x, y] = point(progress);
-  drawing.fillStyle = "rgba(182, 230, 191, .17)";
+  drawing.fillStyle = "rgba(213, 92, 52, .13)";
   drawing.beginPath();
   drawing.arc(x, y, 10, 0, 2 * Math.PI);
   drawing.fill();
-  drawing.fillStyle = "#e0f5dd";
+  drawing.fillStyle = "#bf4928";
   drawing.beginPath();
   drawing.arc(x, y, 3, 0, 2 * Math.PI);
   drawing.fill();
@@ -128,17 +114,17 @@ function resizeCanvases() {
   });
 }
 
-function updateSelection(index, moveToDetail = false) {
+function updateSelection(index) {
   selectedIndex = index;
   const interval = intervals[index];
   const note = shortNote(interval.note);
   cards.forEach((card, cardIndex) => {
     card.setAttribute("aria-pressed", String(cardIndex === index));
   });
-  document.querySelector("#selected-summary").textContent = `SELECTED / C + ${note}`;
+  document.querySelector("#interval-name").textContent = interval.name;
+  document.querySelector("#selected-summary").textContent = `Selected: C + ${note}, ${interval.name}, ratio ${interval.upper} to ${interval.lower}`;
   document.querySelector("#interval-title").textContent = `C + ${note}`;
   document.querySelector("#ratio").textContent = `${interval.upper} : ${interval.lower}`;
-  document.querySelector("#upper-axis").textContent = note;
   document.querySelector("#frequencies").textContent = `${baseFrequency.toFixed(1)} Hz + ${upperFrequency(interval).toFixed(1)} Hz`;
   canvas.setAttribute("aria-label", `Lissajous curve for C4 and ${interval.note}, ${interval.name}`);
   if (playing) {
@@ -146,10 +132,6 @@ function updateSelection(index, moveToDetail = false) {
   }
   drawDetail();
 
-  if (moveToDetail) {
-    document.querySelector("#interval-title").focus({ preventScroll: true });
-    detail.scrollIntoView({ behavior: reducedMotion.matches ? "instant" : "smooth" });
-  }
 }
 
 function makeCard(interval, index) {
@@ -159,15 +141,17 @@ function makeCard(interval, index) {
   card.className = "interval-card";
   card.setAttribute("aria-label", `C4 and ${interval.note}, ${interval.name}, ratio ${interval.upper} to ${interval.lower}`);
   card.setAttribute("aria-pressed", "false");
-  card.innerHTML = `<span class="card-top"><span>${String(index + 1).padStart(2, "0")} / 12</span><span>${interval.upper} : ${interval.lower}</span></span><span class="card-bottom"><strong>C + ${shortNote(interval.note)}</strong><span>${interval.name}</span></span>`;
+  card.innerHTML = `<span class="card-bottom"><strong>C + ${shortNote(interval.note)}</strong><span class="interval-label">${interval.name}</span></span>`;
   preview.className = "card-canvas";
   preview.setAttribute("aria-hidden", "true");
   card.insertBefore(preview, card.querySelector(".card-bottom"));
-  card.addEventListener("click", () => updateSelection(index, true));
+  card.addEventListener("click", () => updateSelection(index));
   return card;
 }
 
 function stopAudio() {
+  audioRequest++;
+  audioStarting = false;
   if (!playing) return;
   const gainToStop = masterGain;
   gainToStop.gain.setTargetAtTime(0, audioContext.currentTime, .012);
@@ -181,13 +165,17 @@ function stopAudio() {
 }
 
 async function toggleAudio() {
-  if (playing) {
+  if (playing || audioStarting) {
     stopAudio();
     return;
   }
+  audioStarting = true;
+  const request = ++audioRequest;
   try {
     audioContext ??= new AudioContext();
     await audioContext.resume();
+    if (request !== audioRequest) return;
+    audioStarting = false;
     masterGain = audioContext.createGain();
     masterGain.gain.setValueAtTime(0, audioContext.currentTime);
     masterGain.gain.setTargetAtTime(.065, audioContext.currentTime, .06);
@@ -205,6 +193,8 @@ async function toggleAudio() {
     document.querySelector("#play-text").textContent = "Stop playback";
     document.querySelector("#play-symbol").textContent = "■";
   } catch {
+    if (request !== audioRequest) return;
+    audioStarting = false;
     document.querySelector("#play-text").textContent = "Audio unavailable";
   }
 }
@@ -215,11 +205,36 @@ intervals.forEach((interval, index) => {
   grid.append(card);
 });
 updateSelection(selectedIndex);
-phaseInput.addEventListener("input", () => {
+function updatePhase() {
   phase = Number(phaseInput.value) * Math.PI / 180;
   document.querySelector("#phase-value").textContent = `${phaseInput.value}°`;
+  document.querySelectorAll("[data-phase]").forEach(button => {
+    button.setAttribute("aria-pressed", String(button.dataset.phase === phaseInput.value));
+  });
   drawDetail();
+}
+phaseInput.addEventListener("input", updatePhase);
+document.querySelectorAll("[data-phase]").forEach(button => {
+  button.addEventListener("click", () => {
+    phaseInput.value = button.dataset.phase;
+    updatePhase();
+  });
 });
+document.querySelector("#previous").addEventListener("click", () => updateSelection((selectedIndex + intervals.length - 1) % intervals.length));
+document.querySelector("#next").addEventListener("click", () => updateSelection((selectedIndex + 1) % intervals.length));
+function updateMotion() {
+  motionButton.setAttribute("aria-pressed", String(tracing));
+  motionButton.textContent = tracing ? "Pause tracing" : "Resume tracing";
+}
+motionButton.addEventListener("click", () => {
+  tracing = !tracing;
+  updateMotion();
+});
+reducedMotion.addEventListener("change", () => {
+  tracing = !reducedMotion.matches;
+  updateMotion();
+});
+updateMotion();
 playButton.addEventListener("click", toggleAudio);
 window.addEventListener("blur", stopAudio);
 document.addEventListener("visibilitychange", () => {
@@ -229,10 +244,16 @@ const resizeObserver = new ResizeObserver(resizeCanvases);
 resizeObserver.observe(grid);
 resizeObserver.observe(canvas);
 resizeCanvases();
+const visibilityObserver = new IntersectionObserver(entries => {
+  detailVisible = entries[0].isIntersecting;
+});
+visibilityObserver.observe(canvas);
 
-function animate() {
-  if (!reducedMotion.matches && !document.hidden) {
-    frame = (frame + 1) % 720;
+function animate(timestamp) {
+  const elapsed = lastTime === undefined ? 0 : Math.min(timestamp - lastTime, 50);
+  lastTime = timestamp;
+  if (tracing && detailVisible && !document.hidden) {
+    frame = (frame + elapsed * .06) % 720;
     drawDetail();
   }
   requestAnimationFrame(animate);

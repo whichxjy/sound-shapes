@@ -1,6 +1,6 @@
 # Sound Shapes
 
-A small, dependency-free website for seeing and hearing musical intervals. Its opening atlas shows twelve Lissajous curves at once; selecting one opens a larger view with phase and playback controls.
+A small, dependency-free website for seeing and hearing musical intervals. A listening study pairs a large Lissajous curve with playback, interval navigation, and visual phase controls. A twelve-interval collection below allows side-by-side comparison without moving the page on selection.
 
 The project brief, scientific boundaries, and implementation notes live in [docs](docs/README.md). They are the source of context for future development; the original video is not needed.
 
