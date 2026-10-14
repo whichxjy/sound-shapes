@@ -4,8 +4,6 @@
 
 Sound Shapes is a small interactive exhibit about musical intervals, three-note chords, and Lissajous curves. A visitor can compare interval drawings, hear two or three pitches together, and explore their mathematical relationships without treating geometry as a verdict on consonance.
 
-The site is in English. It is intended to be public on GitHub and usable as a static website. It does not require the original video, an account, a microphone, or external media.
-
 ## Audience and primary journey
 
 The intended visitor is curious about music or geometric diagrams, but may not know music theory. The first screen presents a centered curve, note pair, interval name, ratio, and playback. Previous and next controls invite exploration. Phase controls and tracing pause live in an expandable “Adjust the drawing” area. A compact collection below shows all twelve intervals side by side. Selecting a specimen updates the study without scrolling; a separate link returns to it.
@@ -47,4 +45,4 @@ The page should feel quiet and minimal: warm paper, cobalt curves, one type fami
 
 ## Out of scope for this version
 
-No consonance score, automatic good/bad labels, waveform upload, microphone access, recording, or faithful reproduction of the source video's diagrams. Additional timbres, tuning systems, chord types, and controlled listening comparisons may be explored later, with their assumptions stated clearly.
+No consonance score, automatic good/bad labels, waveform upload, microphone access, or recording. Additional timbres, tuning systems, chord types, and controlled listening comparisons may be explored later, with their assumptions stated clearly.

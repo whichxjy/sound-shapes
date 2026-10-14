@@ -38,6 +38,6 @@ Chord-specific checks, including rotation, projection consistency, and reference
 ## Public repository checklist
 
 - Keep source code and documentation in English.
-- Do not include the original video, third-party images, downloaded fonts, or private data.
+- Do not include third-party images, downloaded fonts, or private data.
 - Choose and add a license before describing the repository as open source. Public visibility alone does not grant reuse rights.
 - If third-party assets or packages are added later, record their source and license.
