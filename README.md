@@ -1,6 +1,6 @@
 # Sound Shapes
 
-A small, dependency-free website for seeing and hearing musical intervals and three-note chords. Intervals pair a large Lissajous curve with a twelve-interval collection. Chords offer a rotatable three-dimensional signal trajectory, simultaneous three-note playback, major/minor comparison, and expandable pairwise projections. Visual phase controls change the drawings without changing the pitches.
+A small, dependency-free website for seeing and hearing musical intervals and three-note chords. Intervals pair a large Lissajous curve with a twelve-interval collection. Chords offer a rotatable three-dimensional signal trajectory, simultaneous three-note playback, major/minor comparison, and expandable pairwise projections. Pure and Soft timbres offer sine tones or gentle harmonics with a slow onset and quieter sustain. Curves always represent fundamental sine signals. Visual phase controls change the drawings without changing the pitches.
 
 The project brief, scientific boundaries, and implementation notes live in [docs](docs/README.md). They are the source of context for future development; the original video is not needed.
 

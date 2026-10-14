@@ -34,7 +34,9 @@ The list is ordered by ascending pitch. It is not ordered by harmonic complexity
 
 ## What the sound is
 
-Web Audio plays two or three independent sine oscillators at the displayed frequencies. Sine waves have no upper harmonics, unlike most real instruments. The phase slider changes the visual model only; it deliberately does not change the audio oscillators' phase. This makes the intended comparison explicit: the drawing changes while the pitch interval does not. The playback is a demonstration, not a controlled psychoacoustic experiment.
+Web Audio plays two or three oscillators at the displayed fundamental frequencies. Pure, the default timbre, uses sine waves without upper harmonics. Soft uses a custom periodic waveform with relative sine coefficients 1, 0.12, and 0.035 for the fundamental, second, and third harmonics. Its 160 ms attack reaches a lower peak and fades to 55% of that level over 1.6 seconds, then sustains until stopped. It is a synthesized listening option, not a piano simulation. Loudness is not perceptually matched between timbres.
+
+The curves always depict sine signals at the fundamental frequencies; they do not depict Soft’s complete waveform or amplitude envelope. Visual phase controls do not change audio phase. Timbre can be switched during playback without changing pitch, and the choice persists across study modes. The playback is a demonstration, not a controlled psychoacoustic experiment.
 
 ## What cannot be concluded
 

@@ -4,7 +4,7 @@
 
 The website uses plain HTML, CSS, and browser JavaScript modules. `index.html` provides the content and controls, `styles.css` defines the layout, and `main.js` holds the interval data, canvas drawing, state updates, and Web Audio playback. The overview previews and large drawing share the same curve formula. No build system or runtime dependency is needed for this scope.
 
-The selected interval is one entry from the interval table. Collection cards select without moving the page; previous/next controls in the study wrap through the same list. The study contains an animated point and audio, with phase slider, presets, and tracing pause inside a native details element. Static collection drawings stay at 0° for comparison. There is one active group of two or three oscillators. Interval selection retunes the upper oscillator; major/minor chord selection retunes the middle oscillator. Switching study modes stops playback. Pending audio starts are invalidated on stop, blur, or page hide.
+The selected interval is one entry from the interval table. Collection cards select without moving the page; previous/next controls in the study wrap through the same list. The study contains an animated point and audio, with phase slider, presets, and tracing pause inside a native details element. Static collection drawings stay at 0° for comparison. There is one active group of two or three oscillators. Interval selection retunes the upper oscillator; major/minor chord selection retunes the middle oscillator. Switching study modes stops playback. Pending audio starts are invalidated on stop, blur, or page hide. Failed starts clean up any oscillators already created.
 
 ## Why no framework yet
 
@@ -20,6 +20,8 @@ The three-note mode uses a rotatable orthographic 3D canvas view and expandable 
 - Cap canvas pixel density to avoid excessive work on high-resolution displays.
 - Avoid audio autoplay. Stop audio when the page becomes hidden or loses focus.
 
+Pure uses sine oscillators; Soft uses one custom periodic waveform per note and a lower, decaying gain envelope. Gain automation is held and cancelled before retimbre or stop so a scheduled decay cannot restore stopped audio. Browsers without cancelAndHoldAtTime use cancelScheduledValues and an explicit current gain value. Timbre persists across mode switches.
+
 ## Manual checks
 
 1. Start a static server with `python3 -m http.server 8000` and open `http://localhost:8000`.
@@ -28,6 +30,8 @@ The three-note mode uses a rotatable orthographic 3D canvas view and expandable 
 4. Move phase from 0° to 90°; check that the curve changes while the frequency readout does not.
 5. Start, switch intervals, and stop playback. Check the button state and listen at a low volume.
 6. Navigate cards and controls by keyboard. Check phase presets, wrapping previous/next selection, and tracing pause/resume. Test with reduced motion if available.
+
+7. Switch Pure / Soft before and during playback in both modes. Confirm pitches and drawings stay fixed, Soft settles to a quieter sustain, and stop or mode switching cancels the envelope.
 
 Chord-specific checks, including rotation, projection consistency, and reference-cube visibility, are in [the chord study](triads.md).
 

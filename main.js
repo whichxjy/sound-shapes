@@ -31,6 +31,8 @@ let frame = 0;
 let audioContext;
 let oscillators = [];
 let masterGain;
+let tone = "pure";
+let softWave;
 let playing = false;
 let audioStarting = false;
 let audioRequest = 0;
@@ -220,11 +222,33 @@ function makeCard(interval, index) {
   return card;
 }
 
+function holdGain(gain, now) {
+  if (typeof gain.cancelAndHoldAtTime === "function") gain.cancelAndHoldAtTime(now);
+  else {
+    const value = gain.value;
+    gain.cancelScheduledValues(now);
+    gain.setValueAtTime(value, now);
+  }
+}
+
+function applyTimbre() {
+  const now = audioContext.currentTime;
+  if (tone === "soft") {
+    softWave ??= audioContext.createPeriodicWave(new Float32Array(4), new Float32Array([0, 1, .12, .035]));
+    oscillators.forEach(oscillator => oscillator.setPeriodicWave(softWave));
+  } else oscillators.forEach(oscillator => { oscillator.type = "sine"; });
+  holdGain(masterGain.gain, now);
+  const peak = (tone === "soft" ? .095 : .13) / oscillators.length;
+  masterGain.gain.linearRampToValueAtTime(peak, now + (tone === "soft" ? .16 : .06));
+  if (tone === "soft") masterGain.gain.exponentialRampToValueAtTime(peak * .55, now + 1.6);
+}
+
 function stopAudio() {
   audioRequest++;
   audioStarting = false;
-  if (!playing) return;
+  if (!oscillators.length) return;
   const gainToStop = masterGain;
+  holdGain(gainToStop.gain, audioContext.currentTime);
   gainToStop.gain.setTargetAtTime(0, audioContext.currentTime, .012);
   oscillators[0].onended = () => gainToStop.disconnect();
   oscillators.forEach(oscillator => oscillator.stop(audioContext.currentTime + .05));
@@ -249,24 +273,25 @@ async function toggleAudio() {
     audioStarting = false;
     masterGain = audioContext.createGain();
     masterGain.gain.setValueAtTime(0, audioContext.currentTime);
-    masterGain.gain.setTargetAtTime(.13 / frequencies().length, audioContext.currentTime, .06);
     masterGain.connect(audioContext.destination);
     const startTime = audioContext.currentTime;
-    oscillators = frequencies().map(frequency => {
+    for (const frequency of frequencies()) {
       const oscillator = audioContext.createOscillator();
       oscillator.type = "sine";
       oscillator.frequency.value = frequency;
       oscillator.connect(masterGain);
       oscillator.start(startTime);
-      return oscillator;
-    });
+      oscillators.push(oscillator);
+    }
+    applyTimbre();
     playing = true;
     playButton.setAttribute("aria-pressed", "true");
     document.querySelector("#play-text").textContent = "Stop playback";
     document.querySelector("#play-symbol").textContent = "■";
   } catch {
     if (request !== audioRequest) return;
-    audioStarting = false;
+    stopAudio();
+    masterGain?.disconnect();
     document.querySelector("#play-text").textContent = "Audio unavailable";
   }
 }
@@ -333,6 +358,7 @@ document.querySelector("#pair-details").addEventListener("toggle", resizeCanvase
 document.querySelector("#reset-view").addEventListener("click", () => { yaw = -.55; tilt = .45; drawDetail(); });
 canvas.addEventListener("pointerdown", event => {
   if (mode !== "chords") return;
+  canvas.focus({ preventScroll: true });
   dragPosition = [event.clientX, event.clientY];
   canvas.setPointerCapture(event.pointerId);
 });
@@ -378,3 +404,12 @@ function animate(timestamp) {
   requestAnimationFrame(animate);
 }
 requestAnimationFrame(animate);
+
+document.querySelectorAll("[data-tone]").forEach(button => button.addEventListener("click", () => {
+  tone = button.dataset.tone;
+  document.querySelectorAll("[data-tone]").forEach(option => option.setAttribute("aria-pressed", String(option.dataset.tone === tone)));
+  document.querySelector("#tone-description").textContent = tone === "pure"
+    ? "Pure sine tones match the curve’s signal model."
+    : "Gentle harmonics, slow onset, quieter sustain. Curves show fundamental frequencies.";
+  if (playing) applyTimbre();
+}));

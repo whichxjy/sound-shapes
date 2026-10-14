@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f4f1e9">
-  <meta name="description" content="Twelve musical intervals. See the relationship. Hear the difference.">
+  <meta name="description" content="Explore musical intervals and three-note chords through sound and shape.">
   <title>Sound Shapes — A listening room for your eyes</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="gallery.css">
@@ -20,7 +20,7 @@
       <section class="intro" aria-labelledby="page-title">
         <h1 id="page-title">See what you hear.</h1>
         <p id="intro-description">Two notes, one shape. Explore the space between them.</p>
-        <div class="mode-switch" aria-label="Study mode"><button type="button" data-mode="intervals" aria-pressed="true">Intervals</button><button type="button" data-mode="chords" aria-pressed="false">Chords</button></div>
+        <div class="mode-switch" role="group" aria-label="Study mode"><button type="button" data-mode="intervals" aria-pressed="true">Intervals</button><button type="button" data-mode="chords" aria-pressed="false">Chords</button></div>
       </section>
       <section class="instrument" id="detail" aria-label="Selected interval visualizer">
         <p class="visually-hidden" id="selected-summary" aria-live="polite">Selected: C + G, Perfect fifth</p>
@@ -29,9 +29,11 @@
         <div id="chord-view-controls" hidden><p class="view-hint">Drag to rotate · arrow keys also work</p><button type="button" id="reset-view">Reset view</button></div>
         <button id="play" type="button" aria-pressed="false"><span id="play-symbol" aria-hidden="true">▶</span><span id="play-text">Play both notes</span></button>
         <p class="listening-note">Start with your volume low.</p>
-        <div class="chord-switch" id="chord-switch" hidden><button type="button" data-chord="0" aria-pressed="true">Major</button><button type="button" data-chord="1" aria-pressed="false">Minor</button></div>
+        <div class="tone-switch" role="group" aria-label="Sound timbre"><button type="button" data-tone="pure" aria-pressed="true">Pure</button><button type="button" data-tone="soft" aria-pressed="false">Soft</button></div>
+        <p class="tone-description" id="tone-description">Pure sine tones match the curve’s signal model.</p>
+        <div class="chord-switch" id="chord-switch" role="group" aria-label="Chord quality" hidden><button type="button" data-chord="0" aria-pressed="true">Major</button><button type="button" data-chord="1" aria-pressed="false">Minor</button></div>
         <p class="chord-caption" id="chord-caption" hidden>Three notes, three axes. A mathematical shape, not a measure of harmony.</p>
-        <details class="drawing-options"><summary>Adjust the drawing</summary><div class="phase-control"><div class="phase-label"><label for="phase">Visual phase</label><output id="phase-value" for="phase">0°</output></div><input id="phase" type="range" min="0" max="360" value="0"><div class="phase-foot"><span>Changes the shape, not the pitches.</span><div class="phase-presets" aria-label="Phase presets"><button type="button" data-phase="0" aria-pressed="true">0°</button><button type="button" data-phase="90" aria-pressed="false">90°</button><button type="button" data-phase="180" aria-pressed="false">180°</button></div></div><div class="visual-foot"><span id="frequencies">261.6 Hz + 392.4 Hz</span><button id="motion" type="button" aria-pressed="true">Pause tracing</button></div></div></details>
+        <details class="drawing-options"><summary>Adjust the drawing</summary><div class="phase-control"><div class="phase-label"><label for="phase">Visual phase</label><output id="phase-value" for="phase">0°</output></div><input id="phase" type="range" min="0" max="360" value="0"><div class="phase-foot"><span>Changes the shape, not the pitches.</span><div class="phase-presets" role="group" aria-label="Phase presets"><button type="button" data-phase="0" aria-pressed="true">0°</button><button type="button" data-phase="90" aria-pressed="false">90°</button><button type="button" data-phase="180" aria-pressed="false">180°</button></div></div><div class="visual-foot"><span id="frequencies">261.6 Hz + 392.4 Hz</span><button id="motion" type="button" aria-pressed="true">Pause tracing</button></div></div></details>
       </section>
       <section id="chord-extras" class="chord-extras" hidden>
         <details id="chord-phase-options"><summary>Adjust the drawing</summary><div class="chord-phase-controls"><label class="frame-option"><input id="show-frame" type="checkbox" checked> Show reference cube</label><label for="middle-phase">Middle-note phase <output id="middle-phase-value">0°</output></label><input id="middle-phase" type="range" min="0" max="360" value="0"><label for="high-phase">High-note phase <output id="high-phase-value">0°</output></label><input id="high-phase" type="range" min="0" max="360" value="0"><p>Visual phase changes the shape, not the pitches.</p><p id="chord-frequencies"></p><button type="button" id="chord-motion" aria-pressed="true">Pause tracing</button></div></details>
@@ -41,7 +43,7 @@
         <div class="overview-heading"><h2 id="overview-title">Twelve intervals</h2><a href="#detail">Back to listening ↑</a></div>
         <div class="interval-grid" id="interval-grid"></div>
       </section>
-      <section class="notes" id="notes" aria-labelledby="notes-title"><h2 id="notes-title">About the shapes</h2><p>Two notes control horizontal and vertical movement. A third adds depth. Each axis represents one sine signal, and their frequency ratios create a repeating trajectory.</p><p>A mathematical picture, not the path of sound through air. Complexity doesn’t measure consonance.</p><details><summary>Tuning &amp; how it works</summary><div><p>The interval collection is ordered by pitch. Intervals and chords use illustrative just-intonation ratios above C4 (261.63 Hz), which may differ from the same notes on a modern piano.</p><p>Playback uses two or three pure sine tones. Visual phase changes only the drawing. What you hear also depends on timbre, register, tuning, and listening experience. The 3D view is an orthographic projection; camera rotation changes the outline without changing the signals.</p><a href="https://mathworld.wolfram.com/LissajousCurve.html" target="_blank" rel="noopener noreferrer">More about Lissajous curves ↗</a></div></details></section>
+      <section class="notes" id="notes" aria-labelledby="notes-title"><h2 id="notes-title">About the shapes</h2><p>Two notes control horizontal and vertical movement. A third adds depth. Each axis represents one sine signal, and their frequency ratios create a repeating trajectory.</p><p>A mathematical picture, not the path of sound through air. Complexity doesn’t measure consonance.</p><details><summary>Tuning &amp; how it works</summary><div><p>The interval collection is ordered by pitch. Intervals and chords use illustrative just-intonation ratios above C4 (261.63 Hz), which may differ from the same notes on a modern piano.</p><p>Pure uses sine tones; Soft adds gentle harmonics with a slow onset and quieter sustain. Curves show fundamental sine signals in either timbre. Visual phase changes only the drawing. What you hear also depends on timbre, register, tuning, and listening experience. The 3D view is an orthographic projection; camera rotation changes the outline without changing the signals.</p><a href="https://mathworld.wolfram.com/LissajousCurve.html" target="_blank" rel="noopener noreferrer">More about Lissajous curves ↗</a></div></details></section>
     </main>
     <footer><span>Sound Shapes</span><a href="#top">Back to top ↑</a></footer>
   </div>

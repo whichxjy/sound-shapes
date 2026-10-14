@@ -2,7 +2,7 @@
 
 ## Current experience
 
-The Intervals / Chords switch preserves the interval collection and opens a three-note study. The chord mode uses one rotatable 3D trajectory as its main visual and plays all three sine tones together. Major / Minor buttons change the middle pitch during playback. Previous / next controls select the same two chords.
+The Intervals / Chords switch preserves the interval collection and opens a three-note study. The chord mode uses one rotatable 3D trajectory as its main visual and plays all three tones together. Major / Minor buttons change the middle pitch during playback. Previous / next controls select the same two chords.
 
 | Chord | Notes | Relative frequencies | Pairwise ratios |
 | --- | --- | --- | --- |
@@ -25,7 +25,7 @@ The outline depends on camera angle and visual phase. Neither its regularity nor
 
 ## Implementation
 
-`chords.js` contains chord data, signal points, orthographic rotation, ratio reduction, and canvas rendering. The existing static stack needs no 3D runtime dependency. Audio starts the oscillators at one shared time. Per-oscillator gain is 0.13 divided by the number of notes; changing study mode stops playback and cancels any pending start.
+`chords.js` contains chord data, signal points, orthographic rotation, ratio reduction, and canvas rendering. The existing static stack needs no 3D runtime dependency. Audio starts the oscillators at one shared time. Pure per-oscillator gain peaks at 0.13 divided by the number of notes. Soft peaks at 0.095 divided by the number of notes and fades to a quieter sustain; changing study mode stops playback and cancels any pending start.
 
 Rendering is limited to the visible main study, and closed projection details do not animate. Tracing uses a slowed mathematical clock, not an attempt to animate the audible frequency in real time. Its root-axis speed is consistent between major and minor examples.
 

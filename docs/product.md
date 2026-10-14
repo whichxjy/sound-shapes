@@ -24,7 +24,8 @@ The Chords mode replaces the interval collection with one rotatable three-signal
 - Use one base pitch, C4 at approximately 261.63 Hz, and sample just-intonation ratios for the upper pitches.
 - Display each interval in an overview grid. Card selection updates the larger drawing, ratio, note labels, and frequency readout.
 - Let the visitor vary the relative phase from 0° to 360°. Phase changes the drawing and does not change the oscillator frequencies.
-- Play both pitches as quiet sine waves on explicit user action. Stop on a second click, page hide, or window blur.
+- Play both pitches quietly with the selected timbre on explicit user action. Stop on a second click, page hide, or window blur.
+- Offer Pure (default) and Soft timbres in both modes. Switching timbre during playback keeps pitches fixed; curves continue to represent fundamental sine signals.
 - Explain the model and its limits in visible page copy, with a link for further reading.
 
 ## Visual direction

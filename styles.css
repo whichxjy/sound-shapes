@@ -38,7 +38,8 @@ html { scroll-behavior: smooth; scroll-padding-top: 28px; }
 button, input { font: inherit; }
 a { color: inherit; text-underline-offset: 4px; }
 button { cursor: pointer; }
-button:focus-visible, a:focus-visible, input:focus-visible, summary:focus-visible { outline: 2px solid var(--blue); outline-offset: 5px; }
+button:focus-visible, a:focus-visible, input:focus-visible, summary:focus-visible, canvas:focus-visible { outline: 2px solid var(--blue); outline-offset: 5px; }
+canvas:focus-visible { outline-offset: -2px; }
 .shell { width: calc(100% - 80px); max-width: 1120px; margin: auto; }
 .skip-link { position: absolute; top: -80px; padding: 12px; background: #fff; z-index: 5; }
 .skip-link:focus { top: 12px; }
@@ -96,3 +97,8 @@ footer a { text-decoration: none; }
   .notes { padding: 38px 0 48px; }
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+.tone-switch { display: flex; justify-content: center; gap: 4px; }
+.tone-switch button { border: 0; border-radius: 16px; background: transparent; color: var(--muted); padding: 6px 16px; font-size: 11px; }
+.tone-switch button[aria-pressed="true"] { background: #e8e5dd; color: #292923; }
+.tone-description { color: var(--muted); font-size: 10px; line-height: 1.6; max-width: 300px; margin: 10px auto 22px; }
