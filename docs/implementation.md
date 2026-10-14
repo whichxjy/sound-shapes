@@ -2,7 +2,7 @@
 
 ## Current architecture
 
-The website uses plain HTML, CSS, and browser JavaScript modules. `index.html` provides the content and controls, `styles.css` defines the layout, and `main.js` holds the interval data, canvas drawing, state updates, and Web Audio playback. The overview previews and large drawing share the same curve formula. No build system or runtime dependency is needed for this scope.
+The website uses plain HTML, CSS, and browser JavaScript modules. `index.html` provides the content and controls, `styles.css` defines the layout, and `main.js` holds the interval data, SVG interval drawing, state updates, and Web Audio playback. The overview previews and large interval drawing share the SVG curve model in `curves.js`; the chord view uses Canvas. No build system or runtime dependency is needed for this scope.
 
 The selected interval is one entry from the interval table. Collection cards select without moving the page; previous/next controls in the study wrap through the same list. The study contains an animated point and audio, with phase slider, presets, and tracing pause inside a native details element. Static collection drawings stay at 0° for comparison. There is one active group of two or three oscillators. Interval selection retunes the upper oscillator; major/minor chord selection retunes the middle oscillator. Switching study modes stops playback. Pending audio starts are invalidated on stop, blur, or page hide. Failed starts clean up any oscillators already created.
 
@@ -16,8 +16,8 @@ The three-note mode uses a rotatable orthographic 3D canvas view and expandable 
 
 - Use real buttons for cards and playback, a labeled native range input for phase, and visible keyboard focus.
 - Communicate selection with `aria-pressed` as well as visual styling. Do not rely on color alone.
-- Render previews when the collection is created and when layout size changes. Cache interval curve geometry with Path2D; chord rendering projects the three-signal trajectory with depth-dependent opacity. Animate only the detailed point while its canvas is visible; honor reduced-motion preferences and provide an explicit pause control. Use elapsed time for consistent tracing speed across refresh rates.
-- Cap canvas pixel density to avoid excessive work on high-resolution displays.
+- Render previews when the collection is created and when layout size changes. Cache SVG interval paths by size, ratio, and phase; cubic Hermite segments follow the sine trajectory and its tangent. Only the SVG tracing markers move during animation; chord rendering projects the three-signal trajectory with depth-dependent opacity. Animate only the detailed point while the main view is visible; honor reduced-motion preferences and provide an explicit pause control. Use elapsed time for consistent tracing speed across refresh rates.
+- SVG interval drawings stay sharp as their display size changes. Cap chord canvas pixel density to avoid excessive work on high-resolution displays.
 - Avoid audio autoplay. Stop audio when the page becomes hidden or loses focus.
 
 Pure uses sine oscillators; Soft uses one custom periodic waveform per note and a lower, decaying gain envelope. Gain automation is held and cancelled before retimbre or stop so a scheduled decay cannot restore stopped audio. Browsers without cancelAndHoldAtTime use cancelScheduledValues and an explicit current gain value. Timbre persists across mode switches.

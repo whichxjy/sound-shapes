@@ -9,7 +9,7 @@ x(t) = A sin(2π q t)
 y(t) = B sin(2π p t + φ)
 ```
 
-Here `p:q` is the upper-to-base frequency ratio, `φ` is the displayed relative phase, and `t` runs through one complete repeat of the ratio. The axes represent two signal values, not position in air. The figure is a parametric plot. For rational ratios, the path closes; ratios with larger integers generally need more oscillations to complete it. The exact appearance also depends on phase and axis scaling.
+Here `p:q` is the upper-to-base frequency ratio, `φ` is the displayed relative phase, and `t` runs through one complete repeat of the ratio. The axes represent two signal values, not position in air. The figure is a parametric plot. For rational ratios, the path closes; ratios with larger integers generally need more oscillations to complete it. The exact appearance also depends on phase and axis scaling. Interval drawings use SVG cubic segments with analytic sine tangents, sampled at least 32 times per fastest cycle, to closely approximate this trajectory without scaling a bitmap.
 
 The base frequency is C4 = 261.625565 Hz. The upper frequency is calculated as `base × p / q`. These are illustrative **just-intonation** choices. Some do not match the same named note on an equal-tempered piano: for example, the selected 5:3 major sixth is about 436.0 Hz, rather than the piano's A4 = 440 Hz. The names identify approximate musical intervals, not a claim that every tuning system uses those frequencies.
 

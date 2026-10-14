@@ -1,4 +1,5 @@
 import { chords, drawChord, pairRatio } from "./chords.js";
+import { intervalPath, intervalPoint } from "./curves.js";
 
 const intervals = [
   { note: "D♭4", name: "Minor second", upper: 16, lower: 15 },
@@ -17,6 +18,8 @@ const intervals = [
 
 const baseFrequency = 261.625565;
 const canvas = document.querySelector("#curve");
+const intervalSvg = document.querySelector("#interval-curve");
+const visualWrap = document.querySelector(".canvas-wrap");
 const grid = document.querySelector("#interval-grid");
 const phaseInput = document.querySelector("#phase");
 const playButton = document.querySelector("#play");
@@ -93,6 +96,8 @@ function setMode(nextMode) {
   document.querySelector("#intro-description").textContent = mode === "chords" ? "Three notes, one shape. Listen to the whole relationship." : "Two notes, one shape. Explore the space between them.";
   document.querySelector("#previous").setAttribute("aria-label", mode === "chords" ? "Previous chord" : "Previous interval");
   document.querySelector("#next").setAttribute("aria-label", mode === "chords" ? "Next chord" : "Next interval");
+  canvas.hidden = mode !== "chords";
+  intervalSvg.toggleAttribute("hidden", mode === "chords");
   canvas.tabIndex = mode === "chords" ? 0 : -1;
   document.querySelector("#play-text").textContent = idlePlayText();
   if (mode === "chords") updateChord();
@@ -119,51 +124,22 @@ function sizeCanvas(target) {
   return true;
 }
 
-function drawCurve(target, interval, relativePhase, progress, preview = false) {
-  const drawing = target.getContext("2d");
+function drawCurve(target, interval, relativePhase, progress) {
   const width = target.clientWidth;
   const height = target.clientHeight;
   if (!width || !height) return;
-
-  drawing.clearRect(0, 0, width, height);
-
-  const radiusX = Math.min(width * .38, height * .62);
-  const radiusY = height * .37;
-  const steps = preview ? Math.max(800, interval.upper * 32) : Math.max(1200, interval.upper * 96);
-  const point = position => {
-    const angle = 2 * Math.PI * position;
-    return [
-      width / 2 + Math.sin(angle * interval.lower) * radiusX,
-      height / 2 - Math.sin(angle * interval.upper + relativePhase) * radiusY,
-    ];
-  };
-
   const pathKey = `${width}/${height}/${interval.upper}/${interval.lower}/${relativePhase}`;
-  let cached = curvePaths.get(target);
-  if (cached?.key !== pathKey) {
-    const path = new Path2D();
-    for (let index = 0; index <= steps; index++) {
-      const [pointX, pointY] = point(index / steps);
-      if (index === 0) path.moveTo(pointX, pointY);
-      else path.lineTo(pointX, pointY);
-    }
-    cached = { key: pathKey, path };
-    curvePaths.set(target, cached);
+  if (curvePaths.get(target) !== pathKey) {
+    target.setAttribute("viewBox", `0 0 ${width} ${height}`);
+    target.querySelector("path").setAttribute("d", intervalPath(interval, relativePhase, width, height));
+    curvePaths.set(target, pathKey);
   }
-  drawing.strokeStyle = preview ? "#5363ac" : "#263fba";
-  drawing.lineWidth = preview ? 1 : 1.8;
-  drawing.stroke(cached.path);
-
   if (progress === undefined) return;
-  const [x, y] = point(progress);
-  drawing.fillStyle = "rgba(213, 92, 52, .13)";
-  drawing.beginPath();
-  drawing.arc(x, y, 10, 0, 2 * Math.PI);
-  drawing.fill();
-  drawing.fillStyle = "#bf4928";
-  drawing.beginPath();
-  drawing.arc(x, y, 3, 0, 2 * Math.PI);
-  drawing.fill();
+  const [x, y] = intervalPoint(interval, relativePhase, progress, width, height);
+  target.querySelectorAll("circle").forEach(marker => {
+    marker.setAttribute("cx", x);
+    marker.setAttribute("cy", y);
+  });
 }
 
 function drawDetail() {
@@ -175,15 +151,16 @@ function drawDetail() {
     }
     return;
   }
-  drawCurve(canvas, intervals[selectedIndex], phase, frame / 720);
+  drawCurve(intervalSvg, intervals[selectedIndex], phase, frame / 720);
 }
 
 function resizeCanvases() {
   pairCanvases.forEach(sizeCanvas);
-  if (sizeCanvas(canvas)) drawDetail();
+  sizeCanvas(canvas);
+  drawDetail();
   cards.forEach((card, index) => {
-    const preview = card.querySelector("canvas");
-    if (sizeCanvas(preview)) drawCurve(preview, intervals[index], 0, undefined, true);
+    const preview = card.querySelector("svg");
+    drawCurve(preview, intervals[index], 0);
   });
 }
 
@@ -199,7 +176,7 @@ function updateSelection(index) {
   document.querySelector("#interval-title").textContent = `C + ${note}`;
   document.querySelector("#ratio").textContent = `${interval.upper} : ${interval.lower}`;
   document.querySelector("#frequencies").textContent = `${baseFrequency.toFixed(1)} Hz + ${upperFrequency(interval).toFixed(1)} Hz`;
-  canvas.setAttribute("aria-label", `Lissajous curve for C4 and ${interval.note}, ${interval.name}`);
+  intervalSvg.setAttribute("aria-label", `Lissajous curve for C4 and ${interval.note}, ${interval.name}`);
   if (playing) {
     oscillators[1].frequency.setTargetAtTime(upperFrequency(interval), audioContext.currentTime, .025);
   }
@@ -209,13 +186,14 @@ function updateSelection(index) {
 
 function makeCard(interval, index) {
   const card = document.createElement("button");
-  const preview = document.createElement("canvas");
+  const preview = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   card.type = "button";
   card.className = "interval-card";
   card.setAttribute("aria-label", `C4 and ${interval.note}, ${interval.name}, ratio ${interval.upper} to ${interval.lower}`);
   card.setAttribute("aria-pressed", "false");
   card.innerHTML = `<span class="card-bottom"><strong>C + ${shortNote(interval.note)}</strong><span class="interval-label">${interval.name}</span></span>`;
-  preview.className = "card-canvas";
+  preview.setAttribute("class", "card-canvas");
+  preview.innerHTML = '<path class="curve-line"/>';
   preview.setAttribute("aria-hidden", "true");
   card.insertBefore(preview, card.querySelector(".card-bottom"));
   card.addEventListener("click", () => updateSelection(index));
@@ -386,12 +364,12 @@ document.addEventListener("visibilitychange", () => {
 });
 const resizeObserver = new ResizeObserver(resizeCanvases);
 resizeObserver.observe(grid);
-resizeObserver.observe(canvas);
+resizeObserver.observe(visualWrap);
 resizeCanvases();
 const visibilityObserver = new IntersectionObserver(entries => {
   detailVisible = entries[0].isIntersecting;
 });
-visibilityObserver.observe(canvas);
+visibilityObserver.observe(visualWrap);
 
 function animate(timestamp) {
   const elapsed = lastTime === undefined ? 0 : Math.min(timestamp - lastTime, 50);
