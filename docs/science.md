@@ -34,13 +34,21 @@ The list is ordered by ascending pitch. It is not ordered by harmonic complexity
 
 ## What the sound is
 
-Web Audio plays two independent sine oscillators at the displayed frequencies. Sine waves have no upper harmonics, unlike most real instruments. The phase slider changes the visual model only; it deliberately does not change the audio oscillators' phase. This makes the intended comparison explicit: the drawing changes while the pitch interval does not. The playback is a demonstration, not a controlled psychoacoustic experiment.
+Web Audio plays two or three independent sine oscillators at the displayed frequencies. Sine waves have no upper harmonics, unlike most real instruments. The phase slider changes the visual model only; it deliberately does not change the audio oscillators' phase. This makes the intended comparison explicit: the drawing changes while the pitch interval does not. The playback is a demonstration, not a controlled psychoacoustic experiment.
 
 ## What cannot be concluded
 
 Neither the number of lobes, number of line crossings, nor visual density is a validated measure of dissonance. Perceived consonance depends on the spectrum and level of each sound, register, tuning, musical context, culture, and listener. Research discusses several mechanisms, including beating or roughness among nearby partials, harmonicity, and familiarity. These mechanisms do not reduce to one visual complexity score. In particular, comparing these pure-tone examples with rich instrumental chords requires care.
 
-The curve is also not a picture of a sound wave moving through a room, nor a physical trajectory of a vibrating object. It is one mathematical projection of two signals.
+The curve is also not a picture of a sound wave moving through a room, nor a physical trajectory of a vibrating object. It is a mathematical view of signal values.
+
+## Three-note model
+
+Chords use `r(t) = (sin(2π a t), sin(2π b t + φ₂), sin(2π c t + φ₃))`. C major uses 4:5:6; C minor uses 10:12:15. Each audible frequency is `C4 × coefficient / root coefficient`. All three tones play together. The two visual phase controls do not change their audio phases.
+
+The 3D trajectory is shown through an orthographic camera. Camera rotation changes its outline without changing the underlying signals. A reference cube bounds each signal from −1 to +1; it is a coordinate guide, not a room or physical enclosure. The expandable XY, XZ, and YZ plots use the same signal phases and mathematical time. Their reduced ratios are derived from the chord coefficients.
+
+Whole-chord perception cannot be inferred solely from pairwise drawings or the apparent regularity of the 3D shape. See [the chord study](triads.md) for the ratios and interaction details.
 
 ## Reading
 

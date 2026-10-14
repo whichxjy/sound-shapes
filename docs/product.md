@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Sound Shapes is a small interactive exhibit about musical intervals and Lissajous curves. A visitor should be able to see several interval drawings at once, choose one, hear two pitches, and discover that a compelling geometric shape is not a verdict on how consonant the sounds are.
+Sound Shapes is a small interactive exhibit about musical intervals, three-note chords, and Lissajous curves. A visitor can compare interval drawings, hear two or three pitches together, and explore their mathematical relationships without treating geometry as a verdict on consonance.
 
 The site is in English. It is intended to be public on GitHub and usable as a static website. It does not require the original video, an account, a microphone, or external media.
 
@@ -14,9 +14,11 @@ The visitor should leave with three ideas:
 
 1. Two periodic signals can be plotted against each other to form a Lissajous curve.
 2. Small whole-number frequency ratios create paths that repeat after relatively few cycles.
-3. Visual complexity alone does not determine perceived consonance. The appearance can change with phase while the two frequencies stay fixed.
+3. Visual complexity alone does not determine perceived consonance. The appearance can change with phase while the audible frequencies stay fixed.
 
 ## Current experience
+
+The Chords mode replaces the interval collection with one rotatable three-signal trajectory. Major / Minor compares C–E–G and C–E♭–G during playback, changing only the middle pitch. Switching study modes stops playback. A faint reference cube is shown by default and can be toggled in “Adjust the drawing.” Two visual phase controls and three pairwise projections stay inside expandable sections. Tuning and model details are in [the chord study](triads.md).
 
 - Show all twelve chosen intervals above C4 in ascending pitch order. This order is musical position, not a consonance ranking.
 - Use one base pitch, C4 at approximately 261.63 Hz, and sample just-intonation ratios for the upper pitches.
@@ -27,7 +29,7 @@ The visitor should leave with three ideas:
 
 ## Visual direction
 
-The page should feel quiet and minimal: warm paper, cobalt curves, one type family, and generous whitespace. One centered drawing is the focal point. Keep headings small, remove decorative numbering and axes, and show secondary controls and detailed explanations only on expansion. The compact collection shows comparable drawings at a baseline phase of 0°, in ascending pitch order, not a ranking. Avoid dashboard panels, decorative status indicators, stock imagery, and gradients.
+The page should feel quiet and minimal: warm paper, cobalt curves, one type family, and generous whitespace. One centered drawing is the focal point. Keep headings small, remove decorative numbering and unnecessary axes, and show secondary controls and detailed explanations only on expansion. The compact collection shows comparable drawings at a baseline phase of 0°, in ascending pitch order, not a ranking. Avoid dashboard panels, decorative status indicators, stock imagery, and gradients.
 
 ## Acceptance criteria
 
@@ -39,7 +41,9 @@ The page should feel quiet and minimal: warm paper, cobalt curves, one type fami
 - Audio starts only after a user gesture, remains at a modest level, and can be stopped.
 - The page does not imply that curve complexity measures pleasantness or that a Lissajous curve traces the physical path of sound.
 - The site works from a basic static HTTP server without installing packages.
+- The 3D view rotates through pointer input and keyboard arrows, resets through Home or Reset view, and offers a reference-cube toggle. The cube and labeled axes provide subtle orientation guides within the minimal visual style.
+- Chord projections derive from the same three signals, visual phases, and tracing time as the main view. Camera rotation does not change those projections.
 
 ## Out of scope for this version
 
-No consonance score, automatic good/bad labels, waveform upload, microphone access, recording, or faithful reproduction of the source video's diagrams. Additional timbres, tuning systems, and controlled listening comparisons may be explored later, with their assumptions stated clearly.
+No consonance score, automatic good/bad labels, waveform upload, microphone access, recording, or faithful reproduction of the source video's diagrams. Additional timbres, tuning systems, chord types, and controlled listening comparisons may be explored later, with their assumptions stated clearly.

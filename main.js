@@ -1,3 +1,5 @@
+import { chords, drawChord, pairRatio } from "./chords.js";
+
 const intervals = [
   { note: "D♭4", name: "Minor second", upper: 16, lower: 15 },
   { note: "D4", name: "Major second", upper: 9, lower: 8 },
@@ -35,6 +37,66 @@ let audioRequest = 0;
 let tracing = !reducedMotion.matches;
 let detailVisible = true;
 let lastTime;
+let mode = "intervals";
+let selectedChord = 0;
+let yaw = -.55;
+let tilt = .45;
+let dragPosition;
+let showFrame = true;
+const chordPhases = [0, 0, 0];
+const pairs = [[0, 1], [0, 2], [1, 2]];
+const pairCanvases = pairs.map((pair, index) => document.querySelector(`#pair-${index}`));
+
+function frequencies() {
+  if (mode === "chords") {
+    const ratios = chords[selectedChord].ratios;
+    return ratios.map(ratio => baseFrequency * ratio / ratios[0]);
+  }
+  return [baseFrequency, upperFrequency(intervals[selectedIndex])];
+}
+
+function idlePlayText() {
+  return mode === "chords" ? "Play chord" : "Play both notes";
+}
+
+function updateChord() {
+  const chord = chords[selectedChord];
+  document.querySelector("#interval-title").textContent = chord.notes.join(" + ");
+  document.querySelector("#interval-name").textContent = chord.name;
+  document.querySelector("#ratio").textContent = chord.ratios.join(" : ");
+  document.querySelector("#chord-frequencies").textContent = frequencies().map(frequency => `${frequency.toFixed(1)} Hz`).join(" + ");
+  document.querySelector("#selected-summary").textContent = `Selected: ${chord.name}, ${chord.notes.join(", ")}`;
+  canvas.setAttribute("aria-label", `Rotatable three-dimensional signal trajectory for ${chord.name}. X: ${chord.notes[0]}, Y: ${chord.notes[1]}, Z: ${chord.notes[2]}`);
+  document.querySelectorAll("[data-chord]").forEach(button => button.setAttribute("aria-pressed", String(Number(button.dataset.chord) === selectedChord)));
+  pairs.forEach(([first, second], index) => {
+    const ratio = pairRatio(chord, first, second);
+    const label = `${chord.notes[first]}–${chord.notes[second]} · ${ratio.join(":")}`;
+    pairCanvases[index].setAttribute("aria-label", `Pairwise projection ${label}`);
+    pairCanvases[index].nextElementSibling.textContent = label;
+  });
+  if (playing) frequencies().forEach((frequency, index) => oscillators[index].frequency.setTargetAtTime(frequency, audioContext.currentTime, .025));
+  drawDetail();
+}
+
+function setMode(nextMode) {
+  stopAudio();
+  dragPosition = undefined;
+  mode = nextMode;
+  document.body.classList.toggle("chord-mode", mode === "chords");
+  document.querySelectorAll("[data-mode]").forEach(button => button.setAttribute("aria-pressed", String(button.dataset.mode === mode)));
+  document.querySelectorAll("#chord-view-controls, #chord-switch, #chord-caption, #chord-extras").forEach(element => { element.hidden = mode !== "chords"; });
+  document.querySelector(".drawing-options").hidden = mode === "chords";
+  document.querySelector(".overview").hidden = mode === "chords";
+  document.querySelector("#detail").setAttribute("aria-label", mode === "chords" ? "Selected chord visualizer" : "Selected interval visualizer");
+  document.querySelector("#intro-description").textContent = mode === "chords" ? "Three notes, one shape. Listen to the whole relationship." : "Two notes, one shape. Explore the space between them.";
+  document.querySelector("#previous").setAttribute("aria-label", mode === "chords" ? "Previous chord" : "Previous interval");
+  document.querySelector("#next").setAttribute("aria-label", mode === "chords" ? "Next chord" : "Next interval");
+  canvas.tabIndex = mode === "chords" ? 0 : -1;
+  document.querySelector("#play-text").textContent = idlePlayText();
+  if (mode === "chords") updateChord();
+  else updateSelection(selectedIndex);
+  resizeCanvases();
+}
 
 function shortNote(note) {
   return note.slice(0, -1);
@@ -103,10 +165,19 @@ function drawCurve(target, interval, relativePhase, progress, preview = false) {
 }
 
 function drawDetail() {
+  if (mode === "chords") {
+    const progress = frame / (720 * chords[selectedChord].ratios[0]);
+    drawChord(canvas, chords[selectedChord], chordPhases, progress, yaw, tilt, undefined, showFrame);
+    if (document.querySelector("#pair-details").open) {
+      pairs.forEach((pair, index) => drawChord(pairCanvases[index], chords[selectedChord], chordPhases, progress, yaw, tilt, pair));
+    }
+    return;
+  }
   drawCurve(canvas, intervals[selectedIndex], phase, frame / 720);
 }
 
 function resizeCanvases() {
+  pairCanvases.forEach(sizeCanvas);
   if (sizeCanvas(canvas)) drawDetail();
   cards.forEach((card, index) => {
     const preview = card.querySelector("canvas");
@@ -160,7 +231,7 @@ function stopAudio() {
   oscillators = [];
   playing = false;
   playButton.setAttribute("aria-pressed", "false");
-  document.querySelector("#play-text").textContent = "Play both notes";
+  document.querySelector("#play-text").textContent = idlePlayText();
   document.querySelector("#play-symbol").textContent = "▶";
 }
 
@@ -178,14 +249,15 @@ async function toggleAudio() {
     audioStarting = false;
     masterGain = audioContext.createGain();
     masterGain.gain.setValueAtTime(0, audioContext.currentTime);
-    masterGain.gain.setTargetAtTime(.065, audioContext.currentTime, .06);
+    masterGain.gain.setTargetAtTime(.13 / frequencies().length, audioContext.currentTime, .06);
     masterGain.connect(audioContext.destination);
-    oscillators = [baseFrequency, upperFrequency(intervals[selectedIndex])].map(frequency => {
+    const startTime = audioContext.currentTime;
+    oscillators = frequencies().map(frequency => {
       const oscillator = audioContext.createOscillator();
       oscillator.type = "sine";
       oscillator.frequency.value = frequency;
       oscillator.connect(masterGain);
-      oscillator.start();
+      oscillator.start(startTime);
       return oscillator;
     });
     playing = true;
@@ -220,11 +292,19 @@ document.querySelectorAll("[data-phase]").forEach(button => {
     updatePhase();
   });
 });
-document.querySelector("#previous").addEventListener("click", () => updateSelection((selectedIndex + intervals.length - 1) % intervals.length));
-document.querySelector("#next").addEventListener("click", () => updateSelection((selectedIndex + 1) % intervals.length));
+function navigate(direction) {
+  if (mode === "chords") {
+    selectedChord = (selectedChord + direction + chords.length) % chords.length;
+    updateChord();
+  } else updateSelection((selectedIndex + direction + intervals.length) % intervals.length);
+}
+document.querySelector("#previous").addEventListener("click", () => navigate(-1));
+document.querySelector("#next").addEventListener("click", () => navigate(1));
 function updateMotion() {
   motionButton.setAttribute("aria-pressed", String(tracing));
   motionButton.textContent = tracing ? "Pause tracing" : "Resume tracing";
+  document.querySelector("#chord-motion").setAttribute("aria-pressed", String(tracing));
+  document.querySelector("#chord-motion").textContent = motionButton.textContent;
 }
 motionButton.addEventListener("click", () => {
   tracing = !tracing;
@@ -235,6 +315,44 @@ reducedMotion.addEventListener("change", () => {
   updateMotion();
 });
 updateMotion();
+document.querySelector("#chord-motion").addEventListener("click", () => { tracing = !tracing; updateMotion(); });
+document.querySelector("#show-frame").addEventListener("change", event => {
+  showFrame = event.target.checked;
+  drawDetail();
+});
+document.querySelectorAll("[data-mode]").forEach(button => button.addEventListener("click", () => setMode(button.dataset.mode)));
+document.querySelectorAll("[data-chord]").forEach(button => button.addEventListener("click", () => { selectedChord = Number(button.dataset.chord); updateChord(); }));
+["middle", "high"].forEach((name, index) => {
+  document.querySelector(`#${name}-phase`).addEventListener("input", event => {
+    chordPhases[index + 1] = Number(event.target.value) * Math.PI / 180;
+    document.querySelector(`#${name}-phase-value`).textContent = `${event.target.value}°`;
+    drawDetail();
+  });
+});
+document.querySelector("#pair-details").addEventListener("toggle", resizeCanvases);
+document.querySelector("#reset-view").addEventListener("click", () => { yaw = -.55; tilt = .45; drawDetail(); });
+canvas.addEventListener("pointerdown", event => {
+  if (mode !== "chords") return;
+  dragPosition = [event.clientX, event.clientY];
+  canvas.setPointerCapture(event.pointerId);
+});
+canvas.addEventListener("pointermove", event => {
+  if (!dragPosition || mode !== "chords") return;
+  yaw += (event.clientX - dragPosition[0]) * .008;
+  tilt = Math.max(-1.4, Math.min(1.4, tilt + (event.clientY - dragPosition[1]) * .008));
+  dragPosition = [event.clientX, event.clientY];
+  drawDetail();
+});
+canvas.addEventListener("lostpointercapture", () => { dragPosition = undefined; });
+canvas.addEventListener("keydown", event => {
+  if (mode !== "chords" || !["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home"].includes(event.key)) return;
+  event.preventDefault();
+  if (event.key === "Home") { yaw = -.55; tilt = .45; }
+  else if (event.key === "ArrowLeft") yaw -= .12;
+  else if (event.key === "ArrowRight") yaw += .12;
+  else tilt = Math.max(-1.4, Math.min(1.4, tilt + (event.key === "ArrowDown" ? .12 : -.12)));
+  drawDetail();
+});
 playButton.addEventListener("click", toggleAudio);
 window.addEventListener("blur", stopAudio);
 document.addEventListener("visibilitychange", () => {
@@ -253,7 +371,8 @@ function animate(timestamp) {
   const elapsed = lastTime === undefined ? 0 : Math.min(timestamp - lastTime, 50);
   lastTime = timestamp;
   if (tracing && detailVisible && !document.hidden) {
-    frame = (frame + elapsed * .06) % 720;
+    const duration = mode === "chords" ? 720 * chords[selectedChord].ratios[0] : 720;
+    frame = (frame + elapsed * .06) % duration;
     drawDetail();
   }
   requestAnimationFrame(animate);
