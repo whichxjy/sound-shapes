@@ -21,7 +21,8 @@ body.chord-mode #curve:active { cursor: grabbing; }
 body.chord-mode .canvas-wrap { height: 320px; }
 .chord-extras { max-width: 720px; margin: 28px auto 58px; text-align: center; }
 .chord-extras > details + details { margin-top: 20px; }
-.chord-extras > details > summary, .drawing-options > summary { width: 280px; max-width: 100%; margin: auto; text-align: left; }
+.chord-extras > details > summary { width: 14em; max-width: 100%; margin: auto; text-align: left; }
+.drawing-options > summary { width: max-content; max-width: 100%; margin: auto; text-align: left; }
 .chord-phase-controls { max-width: 360px; margin: 22px auto; text-align: left; }
 .chord-phase-controls label { font-size: 12px; display: flex; justify-content: space-between; }
 .chord-phase-controls .frame-option { justify-content: flex-start; align-items: center; gap: 8px; margin-bottom: 24px; color: var(--muted); }
